@@ -1,3 +1,5 @@
 const myModule = require("./my-module");
 const program = require("commander");
-console.log(myModule.foo);
+program.parse(process.argv);
+const filePath = program.args[0];
+console.log(filePath);
