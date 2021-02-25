@@ -2,20 +2,22 @@ console.log("index.js: loaded");
 const userId = 'js-primer-example';
 
 function main() {
-  fetchUserInfo('js-primer-example');
+  fetchUserInfo('js-primer-example')
+    .then((userInfo) => createView(userInfo))
+    .then((view) => displayView(view))
+    .catch((error) => {
+      console.error(`エラーが発生しました(${error})`);
+    })
 }
 
 function fetchUserInfo(userId) {
-  fetch(`https://api.github.com/users/${encodeURIComponent(userId)}`)
+  return fetch(`https://api.github.com/users/${encodeURIComponent(userId)}`)
     .then((response) => {
       console.log(response.status);
       if (!response.ok) {
-        console.error('エラーレスポンス', response);
+        return Promise.reject(new Error(`${response.status}`));
       } else {
-        return response.json().then((userInfo) => {
-          const view = createView(userInfo)
-          displayView(view);
-        })
+        return response.json();
       }
     })
     .catch((error) => {
