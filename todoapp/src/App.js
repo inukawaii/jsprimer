@@ -5,6 +5,19 @@ import { TodoListView } from './view/TodoListView.js';
 export class App {
   constructor() {
     this.todoListModel = new TodoListModel();
+    this.todoListView = new TodoListView();
+  }
+
+  handleAdd(title) {
+    this.todoListModel.addTodo(new TodoItemModel({ title, completed: false }));
+  }
+
+  handleUpdate({ id, completed }) {
+    this.todoListModel.updateTodo({ id, completed });
+  }
+
+  handleDelete({ id }) {
+    this.todoListModel.deleteTodo({ id });
   }
 
   mount() {
@@ -15,13 +28,12 @@ export class App {
 
     this.todoListModel.onChange(() => {
       const todoItems = this.todoListModel.getTodoItems();
-      const todoListView = new TodoListView();
-      const todoListElement = todoListView.createElement(todoItems, {
+      const todoListElement = this.todoListView.createElement(todoItems, {
         onUpdateTodo: ({ id, completed }) => {
-          this.todoListModel.updateTodo({ id, completed });
+          this.handleUpdate({ id, completed });
         },
         onDeleteTodo: ({ id }) => {
-          this.todoListModel.deleteTodo({ id });
+          this.handleDelete({ id });
         }
       })
       render(todoListElement, containerElement);
@@ -29,10 +41,7 @@ export class App {
     });
     formElement.addEventListener('submit', (event) => {
       event.preventDefault();
-      this.todoListModel.addTodo(new TodoItemModel({
-        title: inputElement.value,
-        completed: false
-      }));
+      this.handleAdd(inputElement.value);
       inputElement.value = "";
     });
   }
