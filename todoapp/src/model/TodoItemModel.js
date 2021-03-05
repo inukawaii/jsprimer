@@ -6,4 +6,12 @@ export class TodoItemModel {
     this.title = title;
     this.completed = completed;
   }
+  updateTodo({ id, completed }) {
+    const todoItem = this.items.find(todo => todo.id === id);
+    if (!todoItem) {
+      return;
+    }
+    todoItem.completed = completed;
+    this.emitChange();
+  }
 }
