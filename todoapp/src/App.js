@@ -6,6 +6,9 @@ export class App {
   constructor() {
     this.todoListModel = new TodoListModel();
     this.todoListView = new TodoListView();
+    this.formElement = document.querySelector('#js-form');
+    this.handleAdd = this.handleAdd.bind(this);
+    this.handleSubmit = this.handleSubmit.bind(this);
   }
 
   handleAdd(title) {
@@ -20,9 +23,14 @@ export class App {
     this.todoListModel.deleteTodo({ id });
   }
 
-  mount() {
-    const formElement = document.querySelector('#js-form');
+  handleSubmit(event) {
     const inputElement = document.querySelector('#js-form-input');
+    event.preventDefault();
+    this.handleAdd(inputElement.value);
+    inputElement.value = "";
+  }
+
+  mount() {
     const containerElement = document.querySelector('#js-todo-list');
     const todoItemCountElement = document.querySelector('#js-todo-count');
 
@@ -39,14 +47,11 @@ export class App {
       render(todoListElement, containerElement);
       todoItemCountElement.textContent = `Todoアイテム数: ${this.todoListModel.getTotalCount()}`;
     });
-    formElement.addEventListener('submit', (event) => {
-      event.preventDefault();
-      this.handleAdd(inputElement.value);
-      inputElement.value = "";
-    });
+    this.formElement.addEventListener('submit', this.handleSubmit);
   }
 
   unmount() {
+    this.formElement.removeEventListener('submit', this.handleSubmit);
     // TODO
   }
 }
