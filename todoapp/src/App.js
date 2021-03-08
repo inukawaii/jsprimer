@@ -45,4 +45,8 @@ export class App {
       inputElement.value = "";
     });
   }
+
+  unmount() {
+    // TODO
+  }
 }
