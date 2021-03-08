@@ -23,6 +23,9 @@ export class TodoListModel extends EventEmitter {
   }
 
   addTodo(todoItem) {
+    if (todoItem.title === '') {
+      return;
+    }
     this.items.push(todoItem);
     this.emitChange();
   }
